@@ -16,7 +16,7 @@ If you want to contribute you can create a merge request so other colleagues wil
 
 ## License
 
-Copyright 2022-2024 Deutsche Telekom MMS GmbH
+Copyright 2022-2025 Deutsche Telekom MMS GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
