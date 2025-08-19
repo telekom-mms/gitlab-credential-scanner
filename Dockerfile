@@ -1,5 +1,5 @@
 # use the official kics image as basis image
-FROM checkmarx/kics:v2.1.12-debian
+FROM checkmarx/kics:v2.1.13-debian
 
 WORKDIR /
 
