@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: 3.13
       - run: pip install mkdocs
       - run: pip install mkdocs-material
       - run: cp README.md docs/index.md
