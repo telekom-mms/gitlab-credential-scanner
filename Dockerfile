@@ -1,23 +1,19 @@
 # use the official kics image as basis image
-FROM checkmarx/kics:v2.1.20-debian
+FROM checkmarx/kics:alpine
 
 WORKDIR /
 
 ENV GITLAB_ACCESS_TOKEN=GITLAB_ACCESS_TOKEN
 
 # install necessary packages
-RUN set -eux; \
-  apt-get update && \
-  apt-get install -y --no-install-recommends \
-  python3=3.7.3-1 \
-  python3-pip=18.1-5 \
-  python3-setuptools=40.8.0-1 && \
-  apt-get clean all && \
-  rm -rf /var/lib/apt/lists/*
+RUN export OGUSER=$(whoami)
+USER root
+RUN apk --no-cache add python3 py3-pip py3-setuptools
+USER $OGUSER
 
 # install python packages from our requirements.txt
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r requirements.txt
 
 # copy and execute repo_scanner.py
 COPY repo_scanner.py .
