@@ -1,6 +1,5 @@
 ---
-stages:
-  - kics-scan
+stages: [build, kics]
 
 .docker-login: &docker-login
   before_script:
@@ -8,7 +7,7 @@ stages:
 
 build:
   <<: *docker-login
-  stage: kics-scan
+  stage: build
   script:
     - docker build -t $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} .
     - docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}
@@ -17,7 +16,7 @@ build:
 
 test:
   <<: *docker-login
-  stage: kics-scan
+  stage: kics
   script:
     - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --scan-repo ${TEST_REPOSITORY} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
   needs: [build]
@@ -26,7 +25,7 @@ test:
 
 scan:
   <<: *docker-login
-  stage: kics-scan
+  stage: kics
   script:
     - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
   needs: [build]
