@@ -10,7 +10,7 @@ test:
   <<: *docker-login
   stage: kics-scan
   script:
-    - docker run $CI_REGISTRY_IMAGE:latest --scan-repo ${TEST_REPOSITORY} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
+    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --scan-repo ${TEST_REPOSITORY} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
   needs:
     - build
   rules:
@@ -20,7 +20,7 @@ scan:
   <<: *docker-login
   stage: kics-scan
   script:
-    - docker run $CI_REGISTRY_IMAGE:latest --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
+    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
   needs:
     - build
   rules:
@@ -30,7 +30,7 @@ build:
   <<: *docker-login
   stage: kics-scan
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker build -t $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} .
+    - docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
