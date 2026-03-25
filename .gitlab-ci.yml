@@ -6,26 +6,6 @@ stages:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-test:
-  <<: *docker-login
-  stage: kics-scan
-  script:
-    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --scan-repo ${TEST_REPOSITORY} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
-  needs:
-    - build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $TEST_SCAN == "true"
-
-scan:
-  <<: *docker-login
-  stage: kics-scan
-  script:
-    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
-  needs:
-    - build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $LIVE_SCAN == "true"
-
 build:
   <<: *docker-login
   stage: kics-scan
@@ -34,3 +14,21 @@ build:
     - docker push $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
+
+test:
+  <<: *docker-login
+  stage: kics-scan
+  script:
+    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --scan-repo ${TEST_REPOSITORY} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
+  needs: [build]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $TEST_SCAN == "true"
+
+scan:
+  <<: *docker-login
+  stage: kics-scan
+  script:
+    - docker run $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG} --gitlab-hostname ${GITLAB_HOSTNAME} --gitlab-access-token ${GITLAB_ACCESS_TOKEN}
+  needs: [build]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $LIVE_SCAN == "true"
