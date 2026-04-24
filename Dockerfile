@@ -1,5 +1,5 @@
 # use the official kics image as basis image
-FROM checkmarx/kics:alpine
+FROM checkmarx/kics:alpine@sha256:990ae994fbbe59760c8e4f7e89b1193a39a0c2968909058ec29335cb6d80efc1
 
 WORKDIR /
 
